@@ -30,14 +30,16 @@ class StudentAI():
         # print("Points: ", self.board_points())
 
         #Print avail moves
-        print("%%%%%%%%%%%%%%%%%%% STUDENT-AI's BOARD")
-        self.board.show_board()
-        print("%%%%%%%%%%%%%%%%%%% STUDENT-AI's POSSIBLE MOVES")
+        # print("%%%%%%%%%%%%%%%%%%% STUDENT-AI's BOARD")
+        # self.board.show_board()
+        # print("%%%%%%%%%%%%%%%%%%% STUDENT-AI's POSSIBLE MOVES")
+        '''
         for i,checker_moves in enumerate(moves):
             print(i,':[',end="")
             for j, move in enumerate(checker_moves):
                 print(j,":",move,end=", ")
             print("]")
+            '''
 
         #Look one move ahead
         max_pts = -1000000
@@ -49,8 +51,8 @@ class StudentAI():
                     max_pts = self.board_points()#Update max points
                     cur_move = moves[i][j]#update to move w/ most points
                 self.board.undo()
-        print("MOVE MADE: ", cur_move)
-        self.board.make_move(move, self.color)#Make the optimal move
+
+        self.board.make_move(cur_move, self.color)#Make the optimal move
         move = cur_move
         return move
     def board_points(self): #5 + row number for pawns, 5 + row number + 2 for kings
