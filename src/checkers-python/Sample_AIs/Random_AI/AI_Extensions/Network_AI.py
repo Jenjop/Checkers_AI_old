@@ -7,9 +7,8 @@ We are following the javadoc docstring format which is:
 @raise tag describes the errors this function can raise
 """
 
-import sys
 from socket import *
-
+import sys
 sys.path.append('../')
 from BoardClasses import Move
 from time import sleep
@@ -44,9 +43,8 @@ def end_timer():
     except:
         pass
 
-
 class NetworkAI():
-    def __init__(self, col, row, p, **kwargs):
+    def __init__(self,col,row,p,**kwargs):
         """
         Intializes networkAI
         @param row: no of rows in the board
@@ -62,7 +60,7 @@ class NetworkAI():
         serverName, serverPort, _ = kwargs['info']
         if self.mode == 'host':
             print("Matching")
-            keep_alive()  # HeartBeating
+            keep_alive() #HeartBeating
             import atexit
             atexit.register(end_timer)
             self.topSocket.bind((serverName, serverPort))
@@ -78,8 +76,7 @@ class NetworkAI():
             self.topSocket.connect((serverName, serverPort))
             self.topSocket.send("OK".encode())
             print('OK')
-
-    def sent_final_result(self, move):
+    def sent_final_result(self,move):
         """
         Sends result info to the socket
         @param move: 
@@ -93,7 +90,7 @@ class NetworkAI():
             sentence = str(move).encode()
             self.topSocket.send(sentence)
 
-    def get_move(self, move):
+    def get_move(self,move):
         """
         get_move function for NetworkAI called from the gameloop in the main module.
         @param move: A Move object describing the move.
@@ -102,7 +99,7 @@ class NetworkAI():
         """
 
         sleep(0.3)
-        # TODO: Combine two branches
+        #TODO: Combine two branches
         if self.mode == 'host':
             if move.seq:
                 print('SENT:', str(move))

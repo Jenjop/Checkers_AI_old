@@ -6,11 +6,9 @@ We are following the javadoc docstring format which is:
 @return tag describes what the function returns
 @raise tag describes the errors this function can raise
 """
-from copy import copy
-
 from Move import Move
-
-
+from copy import deepcopy
+from copy import copy
 class Checker():
     def __init__(self, color, location):
         """
@@ -19,11 +17,11 @@ class Checker():
         @param location: has the location of this checker
         """
         self.color = color
-        self.row = location[0]  # stores the row of the piece
-        self.col = location[1]  # stores the col of the piece
-        self.is_king = False  # stores if this piece is king or not
+        self.row = location[0] # stores the row of the piece
+        self.col = location[1] # stores the col of the piece
+        self.is_king = False # stores if this piece is king or not
 
-    def get_possible_moves(self, board):
+    def get_possible_moves(self,board):
         """
         Get all possible moves of this checker. These moves may be filtered in the context of the board.
         @param board: has the current state of the board
@@ -36,7 +34,7 @@ class Checker():
         # and 2,2. explore_direction will be [(1,-1), (1, 1)]
         if self.color == '.':
             return []
-        directions = {"W": [(-1, -1), (-1, 1)], "B": [(1, -1), (1, 1)]}
+        directions = {"W":[(-1,-1),(-1,1)],"B":[(1,-1),(1,1)]}
         result = []
         multiple_jump = []
         board = copy(board)
@@ -47,25 +45,25 @@ class Checker():
             # a king can go all directions
             # but do we allow fly king?
         for i in explore_direction:
-            pos_x, pos_y = self.row + i[0], self.col + i[1]
-            if board.is_in_board(pos_x, pos_y):
+            pos_x,pos_y = self.row+i[0],self.col+i[1]
+            if board.is_in_board(pos_x,pos_y):
                 if board.board[pos_x][pos_y].color == '.':
-                    result.append(Move([(self.row, self.col), (pos_x, pos_y)]))
+                    result.append(Move([(self.row,self.col),(pos_x,pos_y)]))
         # save_color = board.board[self.row][self.col].color
         save_color = board.board[self.row][self.col].color
         board.board[self.row][self.col].color = "."
-        self.binary_tree_traversal(self.row, self.col, multiple_jump, board, explore_direction, [], save_color)
+        self.binary_tree_traversal(self.row,self.col,multiple_jump, board, explore_direction, [],save_color)
         # filter out those at margins
         if multiple_jump != []:
             is_capture = True
             result = []
         for jump in multiple_jump:
-            jump.insert(0, (self.row, self.col))
+            jump.insert(0,(self.row,self.col))
             result.append(Move(jump))
         board.board[self.row][self.col].color = save_color
         return result, is_capture
 
-    def binary_tree_traversal(self, pos_x, pos_y, multiple_jump, board, direction, move, self_color):
+    def binary_tree_traversal(self,pos_x,pos_y,multiple_jump,board,direction,move,self_color):
         """
         Internal helper function for get_possible_moves. Students should not use this.
         This function handles the move chain if multiple jumps are possible for this checker piece
@@ -78,29 +76,25 @@ class Checker():
         """
         for i in direction:
             temp_x, temp_y = pos_x + i[0], pos_y + i[1]
-            if board.is_in_board(temp_x, temp_y) and \
+            if board.is_in_board(temp_x,temp_y) and \
                     board.board[temp_x][temp_y].color == board.opponent[self_color] \
-                    and board.is_in_board(temp_x + i[0], temp_y + i[1]) and board.board[temp_x + i[0]][
-                temp_y + i[1]].color == '.':
+                    and board.is_in_board(temp_x+i[0],temp_y+i[1]) and board.board[temp_x + i[0]][temp_y+ i[1]].color == '.':
                 break
         else:
             if move != []:
                 multiple_jump.append(move)
             return
         for i in direction:
-            temp_x, temp_y = pos_x + i[0], pos_y + i[1]
-            if board.is_in_board(temp_x, temp_y) and board.board[temp_x][temp_y].color == board.opponent[self_color]:
+            temp_x,temp_y = pos_x + i[0],pos_y + i[1]
+            if board.is_in_board(temp_x,temp_y) and board.board[temp_x][temp_y].color == board.opponent[self_color]:
 
-                if board.is_in_board(pos_x + i[0] + i[0], pos_y + i[1] + i[1]) and board.board[pos_x + i[0] + i[0]][
-                    pos_y + i[1] + i[1]].color == '.':
+                if board.is_in_board(pos_x + i[0]+i[0],pos_y + i[1]+i[1]) and board.board[pos_x + i[0] + i[0]][pos_y + i[1] + i[1]].color == '.':
                     backup = board.board[pos_x + i[0]][pos_y + i[1]].color
                     board.board[pos_x + i[0]][pos_y + i[1]].color = "."
-                    move.append((pos_x + i[0] + i[0], pos_y + i[1] + i[1]))
-                    self.binary_tree_traversal(pos_x + i[0] + i[0], pos_y + i[1] + i[1], multiple_jump, board,
-                                               direction, list(move), self_color)
+                    move.append((pos_x + i[0]+i[0],pos_y + i[1]+i[1]))
+                    self.binary_tree_traversal(pos_x + i[0] + i[0],pos_y + i[1] + i[1],multiple_jump,board,direction,list(move),self_color)
                     move.pop()
                     board.board[pos_x + i[0]][pos_y + i[1]].color = backup
-
     # def get_valid_moves(self, board):
     #     """
     #
@@ -127,6 +121,7 @@ class Checker():
     #                 return [Move((self.row, self.col), (i[0],i[1]))]
     # 
     #     return result
+
 
     # def make_move(self):
     #     pass
@@ -157,6 +152,7 @@ class Checker():
         """
         return self.row, self.col
 
+
 # class Move():
 #     def __init__(self,source, destination):
 #         self.source = source
@@ -175,3 +171,5 @@ class Checker():
 #                 temp += "x{}{}".format(p[0],p[1])
 #             temp += "X{}{}".format(self.destination[0], self.destination[1])
 #             return temp
+
+
