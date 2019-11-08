@@ -163,7 +163,8 @@ class StudentAI():
         self.rec_heuristic(root)
 
         avail_moves = root.value[list(root.value)[0]]
-        print(avail_moves)
+        cur_move = avail_moves[0]
+        #print(avail_moves)
 
         self.board.make_move(cur_move, self.color)  # Make the optimal move
         move = cur_move
@@ -171,9 +172,9 @@ class StudentAI():
 
     def ftu(self, color): #Function to use (min vs max by color)
         if color == self.color:  # Calculate Min
-            return min
-        else:  # Calculate Max
             return max
+        else:  # Calculate Max
+            return min
 
     def min_max(self, children, color):  # Returns dict -> {Max/min value: Moves to get here}
         ftu = self.ftu(color) #Use corresponding min or max depending on color
