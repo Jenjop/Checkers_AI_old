@@ -159,7 +159,7 @@ class StudentAI():
         #     cur_move = moves[i]
 
         root = Tree(self.opponent[self.color]) #Tree root
-        self.rec_tree(root)
+        self.rec_tree(root, 6)
         self.rec_heuristic(root)
 
         avail_moves = root.value[list(root.value)[0]]
@@ -208,7 +208,7 @@ class StudentAI():
             for child in root.children:
                 self.print_tree(child, level + 1)
 
-    def rec_tree(self, root: Tree, level=5):
+    def rec_tree(self, root: Tree, level=1):
         if level == 0:
             pass
         else:
